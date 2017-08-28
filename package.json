@@ -1,0 +1,31 @@
+{
+  "name": "rnkit-linkface",
+  "description": "人脸识别/活体检测-linkface for ReactNative",
+  "main": "lib/index.js",
+  "author": "SimMan <liwei0990@gmail.com>",
+  "version": "0.0.1",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "homepage": "https://github.com/rnkit/rnkit-linkface",
+  "bugs": "https://github.com/rnkit/rnkit-linkface/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rnkit/rnkit-linkface"
+  },
+  "keywords": [
+    "react",
+    "react-native",
+    "react-component",
+    "linkface",
+    "rnkit",
+    "rnkit-linkface",
+    "react-native-linkface",
+    "react-native-ocr"
+  ],
+  "peerDependencies": {
+    "react": ">=15.3.1",
+    "react-native": ">=0.28"
+  },
+  "license": "MIT"
+}
