@@ -37,7 +37,8 @@ repositories {
 }
 
 dependencies {
-    compile project(path: ':sTLivenessLibrary')
+    compile project(":LFLivenessLibrary")
+    compile project(":LFLivenessSDK")
     compile 'com.facebook.react:react-native:+'
 }
   

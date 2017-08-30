@@ -16,8 +16,10 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
-import com.sensetime.stlivenesslibrary.ui.LivenessActivity;
-import com.sensetime.stlivenesslibrary.util.Constants;
+
+import com.linkface.liveness.ui.LivenessActivity;
+import com.linkface.liveness.util.Constants;
+import com.linkface.liveness.util.LivenessUtils;
 
 import java.io.File;
 
@@ -61,7 +63,7 @@ public class LinkFaceModule extends ReactContextBaseJavaModule implements Activi
                 for (int i = 0; i < 4; i ++) {
                     byte[] image = data.getByteArrayExtra("image" + i);
                     String imageName = java.util.UUID.randomUUID().toString() + ".jpg";
-                    LivenessActivity.saveFile(image, EXTRA_RESULT_PATH, imageName);
+                    LivenessUtils.saveFile(image, EXTRA_RESULT_PATH, imageName);
                     list.pushString(EXTRA_RESULT_PATH + imageName);
                 }
                 map.putArray("arrSTImage", list);
