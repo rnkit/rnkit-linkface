@@ -96,15 +96,16 @@ import RNKitLinkFace from 'rnkit-linkface';
 
 ```jsx
 try {
-	const result = await RNKitLinkFace.start({
-		"sequence": [
-			{ "lost": false,"action": "BLINK","threshold": 0.5 },
-			{ "lost": false,"action": "MOUTH","threshold": 0.5 },
-			{ "lost": false,"action": "NOD","threshold": 0.5 },
-			{ "lost": false,"action": "YAW","threshold": 0.5}
-		],
-		"outType": "video"
-	});
+  const result = await RNKitLinkFace.start({
+    "outType" : "video",
+    "Complexity" : 1,
+    "sequence" : [
+      "BLINK",
+      "MOUTH",
+      "NOD",
+      "YAW"
+    ]
+  });
 	console.log(result);
 } catch (error) {
 	console.log(`code: ${error.code}, message: ${error.message}`);
@@ -115,6 +116,7 @@ try {
 
 | Key | Type | Default | Description |
 | --- | --- | --- | --- |
+| Complexity | int |  | 活体检测复杂度
 | sequence | array |  | 设置识别序列, 活体检测复杂度 |
 | outType | string |  | 输出方案, 单图方案:singleImg, 多图方案:multiImg, 低质量视频方案:video, 高质量视频方案:fullVideo |
 
@@ -124,6 +126,7 @@ try {
 | --- | --- | --- | --- |
 | encryTarData | string |  | 活体识别二进制文件路径 |
 | arrSTImage | array[string] |  | 返回的图片路径数组 |
+| lfVideoData | string | | 视频地址 |
 
 ##### Error
 
@@ -145,13 +148,27 @@ try {
 RNKitLinkFace.clean();
 ```
 
-### event STMultiLivenessDidStart ( iOS only )
+### event MultiLivenessDidStart ( iOS only )
 
 ```jsx
 import { NativeEventEmitter } from 'react-native';
 const nativeEventEmitter = new NativeEventEmitter(RNKitLinkFace);
 
-const listener = nativeEventEmitter.addListener('STMultiLivenessDidStart', () => {
+const listener = nativeEventEmitter.addListener('MultiLivenessDidStart', () => {
+	// 此方法可能会回调多次
+});
+
+// 使用完后记得移除
+listener.remove();
+```
+
+### event MultiLivenessDidFail ( iOS only )
+
+```jsx
+import { NativeEventEmitter } from 'react-native';
+const nativeEventEmitter = new NativeEventEmitter(RNKitLinkFace);
+
+const listener = nativeEventEmitter.addListener('MultiLivenessDidFail', () => {
 	// 此方法可能会回调多次
 });
 
