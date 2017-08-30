@@ -31,6 +31,16 @@
     return nil;
 }
 
++ (NSString *)saveFaceVideo:(NSData *)faceVideo
+{
+    if ([RNKitLinkFaceUtils createLinkFaceFolder] && faceVideo) {
+        NSString *filePath = [[RNKitLinkFaceUtils getLinkFacePath] stringByAppendingString:[NSString stringWithFormat:@"%ld.mp4", time(NULL)]];
+        [faceVideo writeToFile:filePath atomically:YES];
+        return filePath;
+    }
+    return nil;
+}
+
 + (BOOL) createLinkFaceFolder
 {
     if (![[NSFileManager defaultManager] fileExistsAtPath:[RNKitLinkFaceUtils getLinkFacePath]]) {

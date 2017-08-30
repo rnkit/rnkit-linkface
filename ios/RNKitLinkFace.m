@@ -23,13 +23,16 @@
 #endif
 
 #import "RNKitLinkFaceUtils.h"
-#import "STMultipleLivenessController.h"
-#import "STImage.h"
+#import "LFMultipleLivenessController.h"
+#import "LFImage.h"
 #import "STAlertView.h"
 
-@interface RNKitLinkFace() <STMultipleLivenessDelegate, STAlertViewDelegate>
+NSString *const MultiLivenessDidStart = @"MultiLivenessDidStart";
+NSString *const MultiLivenessDidFail = @"MultiLivenessDidFail";
 
-@property (nonatomic , retain) STMultipleLivenessController *multipleLiveVC;
+@interface RNKitLinkFace() <LFMultipleLivenessDelegate, STAlertViewDelegate>
+
+@property (nonatomic , retain) LFMultipleLivenessController *multipleLiveVC;
 
 @end
 
@@ -47,7 +50,7 @@ RCT_EXPORT_MODULE()
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[@"STMultiLivenessDidStart"];
+    return @[MultiLivenessDidStart, MultiLivenessDidFail];
 }
 
 RCT_EXPORT_METHOD(start:(NSDictionary *)args
@@ -83,8 +86,8 @@ RCT_EXPORT_METHOD(start:(NSDictionary *)args
         }
         
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.multipleLiveVC];
-        [navigationController setNavigationBarHidden:NO];
-        [navigationController.navigationBar setValue:@0 forKeyPath:@"backgroundView.alpha"];
+        [navigationController setNavigationBarHidden:YES];
+//        [navigationController.navigationBar setValue:@0 forKeyPath:@"backgroundView.alpha"];
         [presentingController presentViewController:navigationController animated:YES completion:^{
             [_multipleLiveVC restart];
         }];
@@ -102,15 +105,16 @@ RCT_EXPORT_METHOD(clean) {
 
 #pragma - mark -
 #pragma - mark STMultipleLivenessDelegate
-- (void)STMultiLivenessDidStart
+- (void)multiLivenessDidStart
 {
     if (_hasListener) {
-        [self sendEventWithName:@"STMultiLivenessDidStart" body:nil];
+        [self sendEventWithName:@"MultiLivenessDidStart" body:nil];
     }
 }
 
-- (void)STMultiLivenessDidSuccessfulGetData:(NSData *)encryTarData
-                                   stImages:(NSArray *)arrSTImage
+- (void) multiLivenessDidSuccessfulGetData:(NSData *)encryTarData
+                                  lfImages:(NSArray *)arrLFImage
+                               lfVideoData:(NSData *)lfVideoData
 {
     NSMutableDictionary *resDic = [NSMutableDictionary new];
     
@@ -119,27 +123,35 @@ RCT_EXPORT_METHOD(clean) {
         [resDic setObject:encryTarDataPath ? : [NSNull null] forKey:@"encryTarData"];
     }
     
-    if (arrSTImage) {
-        NSMutableArray *imgArr = [NSMutableArray arrayWithCapacity:arrSTImage.count];
-        for (STImage *stImage in arrSTImage) {
+    if (arrLFImage) {
+        NSMutableArray *imgArr = [NSMutableArray arrayWithCapacity:arrLFImage.count];
+        for (LFImage *stImage in arrLFImage) {
             NSString *imgPath = [RNKitLinkFaceUtils saveFaceImage:stImage.image];
             [imgArr addObject:imgPath ? : [NSNull null]];
         }
-        [resDic setObject:imgArr forKey:@"arrSTImage"];
+        [resDic setObject:imgArr forKey:@"arrLFImage"];
+    }
+    
+    if (lfVideoData) {
+        NSString *videoPath = [RNKitLinkFaceUtils saveFaceVideo:lfVideoData];
+        [resDic setObject:videoPath ? : [NSNull null] forKey:@"lfVideoData"];
     }
     
     if (_resolve) {
         _resolve(resDic);
+        _resolve = nil;
     }
     [self dismiss];
 }
 
-- (void)STMultiLivenessDidFailWithType:(STMultipleLivenessError)iErrorType
-                         DetectionType:(STDetectionType)iDetectionType
-                        DetectionIndex:(NSInteger)iIndex
-                                  Data:(NSData *)encryTarData
+- (void) multiLivenessDidFailWithType:(LFMultipleLivenessError)iErrorType
+                        DetectionType:(LFDetectionType)iDetectionType
+                       DetectionIndex:(NSInteger)iIndex
+                                 Data:(NSData *)encryTarData
+                             lfImages:(NSArray *)arrLFImage
+                          lfVideoData:(NSData *)lfVideoData
 {
-    if (iErrorType == STMultipleLivenessFaceChanged && iIndex == 0) {
+    if (iErrorType == LFMultipleLivenessFaceChanged && iIndex == 0) {
         [self.multipleLiveVC restart];
         return;
     }
@@ -147,58 +159,58 @@ RCT_EXPORT_METHOD(clean) {
     if (_reject) {
         switch (iErrorType) {
                 
-            case STMultipleLivenessInitFaild:
+            case LFMultipleLivenessInitFaild:
             {
-                _reject(@"InitFaild", @"初始化失败", nil);
+                [self faild:@"InitFaild" message:@"初始化失败" error:nil];
             }
                 break;
                 
-            case STMultipleLivenessCameraError:
+            case LFMultipleLivenessCameraError:
             {
-                _reject(@"CameraError", @"相机权限获取失败", nil);
+                [self faild:@"CameraError" message:@"相机权限获取失败" error:nil];
             }
                 break;
                 
-            case STMultipleLivenessFaceChanged:
+            case LFMultipleLivenessFaceChanged:
             {
                 STAlertView *alert = [[STAlertView alloc] initWithTitle:@"采集失败" delegate:self];
                 [alert showOnView:[UIApplication sharedApplication].keyWindow];
-                _reject(@"FaceChanged", @"人脸变更", nil);
+                [self faild:@"FaceChanged" message:@"人脸变更" error:nil];
                 return;
             }
                 break;
                 
-            case STMultipleLivenessTimeOut:
+            case LFMultipleLivenessTimeOut:
             {
                 STAlertView *alert = [[STAlertView alloc] initWithTitle:@"采集失败" delegate:self];
                 [alert showOnView:[UIApplication sharedApplication].keyWindow];
-                _reject(@"TimeOut", @"超时", nil);
+                [self faild:@"TimeOut" message:@"超时" error:nil];
                 return;
             }
                 break;
                 
-            case STMultipleLivenessWillResignActive:
+            case LFMultipleLivenessWillResignActive:
             {
-                _reject(@"WillResignActive", @"活体验证失败, 请保持前台运行", nil);
+                [self faild:@"WillResignActive" message:@"活体验证失败, 请保持前台运行" error:nil];
             }
                 break;
                 
                 
-            case STMultipleLivenessInternalError:
+            case LFMultipleLivenessInternalError:
             {
-                _reject(@"InternalError", @"内部错误", nil);
+                [self faild:@"InternalError" message:@"内部错误" error:nil];
             }
                 break;
                 
-            case STMultipleLivenessBadJson:
+            case LFMultipleLivenessBadJson:
             {
-                _reject(@"BadJson", @"解析Json指令失败!", nil);
+                [self faild:@"BadJson" message:@"解析Json指令失败!" error:nil];
                 return;
             }
                 break;
                 
             default:
-                _reject(@"Unknown", @"未知错误!", nil);
+                [self faild:@"Unknown" message:@"未知错误!" error:nil];
                 break;
         }
     }
@@ -206,11 +218,19 @@ RCT_EXPORT_METHOD(clean) {
     [self dismiss];
 }
 
-- (void)STMultiLivenessDidCancel
+- (void) multiLivenessDidCancel
 {
-    [self dismiss];
+    [self faild:@"Cancel" message:@"用户取消识别" error:nil];
+}
+
+- (void) faild:(NSString *)code message:(NSString *)message error:(NSError *)error
+{
     if (_reject) {
-        _reject(@"Cancel", @"用户取消识别", nil);
+        _reject(code, message, error);
+        _reject = nil;
+    }
+    if (_hasListener) {
+        [self sendEventWithName:MultiLivenessDidFail body:nil];
     }
 }
 
@@ -228,10 +248,10 @@ RCT_EXPORT_METHOD(clean) {
     _hasListener = NO;
 }
 
-- (STMultipleLivenessController *)multipleLiveVC
+- (LFMultipleLivenessController *)multipleLiveVC
 {
     if (!_multipleLiveVC) {
-        _multipleLiveVC = [[STMultipleLivenessController alloc] init];
+        _multipleLiveVC = [[LFMultipleLivenessController alloc] init];
         _multipleLiveVC.delegate = self;
     }
     return _multipleLiveVC;
@@ -243,6 +263,7 @@ RCT_EXPORT_METHOD(clean) {
         case 0:
         {
             [self.multipleLiveVC cancel];
+            [self dismiss];
         }
             break;
         case 1:
@@ -254,6 +275,7 @@ RCT_EXPORT_METHOD(clean) {
         default:
         {
             [self.multipleLiveVC cancel];
+            [self dismiss];
         }
             break;
     }

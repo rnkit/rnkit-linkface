@@ -13,6 +13,8 @@
 
 + (NSString *)saveFaceImage:(UIImage *)image;
 + (NSString *)saveFaceData:(NSData *)faceData;
++ (NSString *)saveFaceVideo:(NSData *)faceVideo;
+
 + (BOOL)cleanLinkFacePath;
 
 @end
