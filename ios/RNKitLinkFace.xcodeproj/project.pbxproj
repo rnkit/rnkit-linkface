@@ -25,7 +25,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		134814201AA4EA6300B7C361 /* libRNKitExcard.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNKitExcard.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		134814201AA4EA6300B7C361 /* libRNKitLinkFace.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNKitLinkFace.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3FA30F031F54129400BB868E /* RNKitLinkFaceUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNKitLinkFaceUtils.h; sourceTree = "<group>"; };
 		3FA30F041F54129400BB868E /* RNKitLinkFaceUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNKitLinkFaceUtils.m; sourceTree = "<group>"; };
 		3FA30F2A1F548A0E00BB868E /* STAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STAlertView.h; sourceTree = "<group>"; };
@@ -48,7 +48,7 @@
 		134814211AA4EA7D00B7C361 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				134814201AA4EA6300B7C361 /* libRNKitExcard.a */,
+				134814201AA4EA6300B7C361 /* libRNKitLinkFace.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -69,9 +69,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		58B511DA1A9E6C8500147676 /* RNKitExcard */ = {
+		58B511DA1A9E6C8500147676 /* RNKitLinkFace */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNKitExcard" */;
+			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNKitLinkFace" */;
 			buildPhases = (
 				58B511D71A9E6C8500147676 /* Sources */,
 				58B511D81A9E6C8500147676 /* Frameworks */,
@@ -81,9 +81,9 @@
 			);
 			dependencies = (
 			);
-			name = RNKitExcard;
+			name = RNKitLinkFace;
 			productName = RCTDataManager;
-			productReference = 134814201AA4EA6300B7C361 /* libRNKitExcard.a */;
+			productReference = 134814201AA4EA6300B7C361 /* libRNKitLinkFace.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -112,7 +112,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				58B511DA1A9E6C8500147676 /* RNKitExcard */,
+				58B511DA1A9E6C8500147676 /* RNKitLinkFace */,
 			);
 		};
 /* End PBXProject section */
@@ -219,7 +219,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = RNKitExcard;
+				PRODUCT_NAME = RNKitLinkFace;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -238,7 +238,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = RNKitExcard;
+				PRODUCT_NAME = RNKitLinkFace;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -255,7 +255,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNKitExcard" */ = {
+		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNKitLinkFace" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				58B511F01A9E6C8500147676 /* Debug */,
