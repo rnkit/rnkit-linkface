@@ -74,7 +74,7 @@ public class LinkFaceModule extends ReactContextBaseJavaModule implements Activi
                 promise.reject("Unknow", requestCode + "");
             }
         } catch (Exception e) {
-            promise.reject("Exception", e.getMessage());
+            if (promise != null) promise.reject("Exception", e.getMessage());
         }
     }
 
