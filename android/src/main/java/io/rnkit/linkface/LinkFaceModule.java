@@ -135,7 +135,7 @@ public class LinkFaceModule extends ReactContextBaseJavaModule implements Activi
 
         } catch (Exception e) {
             e.printStackTrace();
-            promise.reject("Exception", e.getMessage());
+            if (promise != null) promise.reject("Exception", e.getMessage());
         }
     }
 
